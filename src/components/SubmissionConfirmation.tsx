@@ -1,12 +1,15 @@
 /* This is a form section that must be used within a HOC component containing a <Formik /> form. */
 
-import React, { useState } from 'react';
-import { ErrorMessage, Formik, Form, Field, useFormik, useField } from 'formik';
-import * as Yup from 'yup';
-import { Steps } from 'antd';
+import { Result } from 'antd';
+import { SmileOutlined } from '@ant-design/icons';
 
 const SubmissionConfirmation = () => {
-    return <>Submission Confirmation</>;
+    return (
+        <Result
+            icon={<SmileOutlined />}
+            title="You did it! We cannot wait to come alongside you in your jouney toward your healthiest, happiest self!"
+        />
+    );
 };
 
 export default SubmissionConfirmation;

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ErrorMessage, Formik, Form, Field, useFormik, useField } from 'formik';
+import { useState } from 'react';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { Button, Steps } from 'antd';
 import GeneralInfo from './GeneralInfo';
@@ -7,13 +7,10 @@ import HealthConditions from './HealthConditions';
 import MedicalHistory from './MedicalHistory';
 import ReviewInfo from './ReviewInfo';
 import SubmissionConfirmation from './SubmissionConfirmation';
+import { genderOptions } from '../constants/genders';
+import { maritalStatus } from '../constants/maritalStatus';
+import { stateAbbreviations } from '../constants/stateAbbreviations';
 import './PatientEnrollmentForm.css';
-
-// handle submit
-// initial values and types
-// prev / next functions
-// nav between screens
-// validation schema
 
 const { Step } = Steps;
 const steps = [
@@ -24,6 +21,20 @@ const steps = [
         content: <GeneralInfo />,
         validationSchema: Yup.object({
             firstName: Yup.string().max(15, 'Must be 15 characters or less').required('Required'),
+            lastName: Yup.string().max(20, 'Must be 20 characters or less').required('Required'),
+            gender: Yup.string().oneOf(genderOptions, 'Invalid gender option selected').required('Required'),
+            dateOfBirth: Yup.date().max(new Date()), //.required('Required'),
+            email: Yup.string().email('Invalid email address').required('Required'),
+            phoneNumber: Yup.string()
+                // .matches(/[0-9]{3}-[0-9]{3}-[0-9]{4}/, 'Phone number must be in format xxx-xxx-xxxx')
+                .required('Required'),
+            addressLine1: Yup.string().required('Required'),
+            city: Yup.string().required('Required'),
+            state: Yup.string().oneOf(stateAbbreviations, 'Invalid state selected').required('Required'),
+            postalCode: Yup.string()
+                .matches(/[0-9]*/, 'Zip code must only contain numerals')
+                .required('Required'),
+            maritalStatus: Yup.string().oneOf(maritalStatus, 'Invalid marital status selected').required('Required'),
         }),
     },
     {
@@ -31,18 +42,14 @@ const steps = [
         title: 'Health Conditions',
         description: `Share where you're at today.`,
         content: <HealthConditions />,
-        validationSchema: Yup.object({
-            lastName: Yup.string().max(20, 'Must be 20 characters or less').required('Required'),
-        }),
+        validationSchema: Yup.object({}),
     },
     {
         key: 'medical-history',
         title: 'Medical History',
         description: `Let's make sure we have all the info.`,
         content: <MedicalHistory />,
-        validationSchema: Yup.object({
-            email: Yup.string().email('Invalid email address').required('Required'),
-        }),
+        validationSchema: Yup.object({}),
     },
     {
         key: 'review-info',
@@ -70,10 +77,11 @@ const PatientEnrollmentForm = () => {
     };
 
     const submitForm = (values: any) => {
-        console.log(`logging values...`);
-        console.log(`values: ${values}`);
+        const formInputs = Object.entries(values);
+        formInputs.map((input: any) => {
+            return console.log(`${input[0]}: ${input[1]}`);
+        });
         setFormSubmitted(true);
-        // setCurrentStep(steps.length); // don't do this, it'll mess up validationSchema's indexing
     };
 
     const isLastStep = () => {
@@ -85,7 +93,26 @@ const PatientEnrollmentForm = () => {
             initialValues={{
                 firstName: '',
                 lastName: '',
+                gender: '',
+                dateOfBirth: '',
                 email: '',
+                phoneNumber: '',
+                addressLine1: '',
+                city: '',
+                state: '',
+                postalCode: '',
+                maritalStatus: '',
+                healthConditions: [],
+                tobaccoStatus: '',
+                tobaccoHistory: '',
+                alcoholStatus: '',
+                alcoholFrequency: '',
+                alcoholVolume: '',
+                drugsStatus: '',
+                drugsFrequency: '',
+                currentMedications: '',
+                medicationAllergies: '',
+                hospitalizations: '',
             }}
             validationSchema={steps[currentStep].validationSchema}
             onSubmit={(values) => {
@@ -96,32 +123,41 @@ const PatientEnrollmentForm = () => {
                 }
             }}
         >
-            <Form>
-                <Steps current={currentStep} status={formSubmitted ? 'finish' : undefined}>
-                    {steps.map((item) => (
-                        // component with validation for step wrapping this
-                        <Step title={item.title} description={item.description} key={item.key} />
-                    ))}
-                </Steps>
+            {(props) => (
+                <Form className="patient-enrollment-form">
+                    <div className="patient-enrollment-form-progress">
+                        <Steps current={currentStep} status={formSubmitted ? 'finish' : undefined}>
+                            {steps.map((item) => (
+                                <Step title={item.title} description={item.description} key={item.key} />
+                            ))}
+                        </Steps>
+                    </div>
+                    <div className="patient-enrollment-form-fields">
+                        {formSubmitted ? (
+                            <SubmissionConfirmation />
+                        ) : isLastStep() ? (
+                            <ReviewInfo formValues={props.values} />
+                        ) : (
+                            steps[currentStep].content
+                        )}
 
-                {console.log(`currentStep: ${currentStep}`)}
-                {formSubmitted ? <SubmissionConfirmation /> : steps[currentStep].content}
-
-                <div>
-                    {!formSubmitted ? (
-                        <>
-                            {currentStep > 0 ? (
-                                <Button type="primary" onClick={() => goToPrevStep()}>
-                                    Previous
-                                </Button>
+                        <div>
+                            {!formSubmitted ? (
+                                <>
+                                    {currentStep > 0 ? (
+                                        <Button type="primary" onClick={() => goToPrevStep()}>
+                                            Previous
+                                        </Button>
+                                    ) : null}
+                                    <Button type="primary" htmlType="submit">
+                                        {isLastStep() ? 'Submit' : 'Next'}
+                                    </Button>
+                                </>
                             ) : null}
-                            <Button type="primary" htmlType="submit">
-                                {isLastStep() ? 'Submit' : 'Next'}
-                            </Button>
-                        </>
-                    ) : null}
-                </div>
-            </Form>
+                        </div>
+                    </div>
+                </Form>
+            )}
         </Formik>
     );
 };
