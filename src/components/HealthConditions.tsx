@@ -16,21 +16,11 @@ const HealthConditions = () => {
         return s.charAt(0).toUpperCase() + s.slice(1);
     };
 
-    const updateConditions = (condition: string) => {};
-
-    const conditionOptions: JSX.Element[] = [];
+    const conditionOptionsGrouped: JSX.Element[] = [];
     healthConditionsMap.forEach((value, key) => {
-        conditionOptions.push(
+        conditionOptionsGrouped.push(
             <>
-                <h3>{capitalizeFirstLetter(key)}</h3>
-                <Select
-                    mode="multiple"
-                    allowClear
-                    style={{ width: '100%' }}
-                    placeholder="Please select"
-                    onChange={updateConditions}
-                    key={key}
-                >
+                <OptGroup label={capitalizeFirstLetter(key)} key={key}>
                     {value.map((condition) => {
                         return (
                             <Option key={condition} value={condition}>
@@ -38,15 +28,24 @@ const HealthConditions = () => {
                             </Option>
                         );
                     })}
-                </Select>
+                </OptGroup>
             </>,
         );
     });
 
     return (
         <>
-            <h1>Select any conditions you've already identified in yourself</h1>
-            {conditionOptions}
+            <h1>Select any conditions you've experienced</h1>
+            <Select
+                mode="multiple"
+                allowClear={true}
+                style={{ width: '100%' }}
+                placeholder="Please select"
+                onChange={() => {}}
+                onSelect={() => {}}
+            >
+                {conditionOptionsGrouped}
+            </Select>
         </>
     );
 };

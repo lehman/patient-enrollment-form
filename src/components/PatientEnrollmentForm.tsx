@@ -125,13 +125,16 @@ const PatientEnrollmentForm = () => {
         >
             {(props) => (
                 <Form className="patient-enrollment-form">
-                    <div className="patient-enrollment-form-progress">
-                        <Steps current={currentStep} status={formSubmitted ? 'finish' : undefined}>
-                            {steps.map((item) => (
-                                <Step title={item.title} description={item.description} key={item.key} />
-                            ))}
-                        </Steps>
-                    </div>
+                    <Steps
+                        responsive={true}
+                        className="patient-enrollment-form-progress"
+                        current={currentStep}
+                        status={formSubmitted ? 'finish' : undefined}
+                    >
+                        {steps.map((item) => (
+                            <Step title={item.title} description={item.description} key={item.key} />
+                        ))}
+                    </Steps>
                     <div className="patient-enrollment-form-fields">
                         {formSubmitted ? (
                             <SubmissionConfirmation />

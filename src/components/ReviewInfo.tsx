@@ -6,7 +6,7 @@ import { Card } from 'antd';
 const ReviewInfo = ({ formValues, ...props }: any) => {
     const [field, meta] = useField({ ...props, name: 'acceptedTerms', type: 'checkbox' });
 
-    const formInputs = Object.entries(formValues);
+    const formInputs = Object.entries(formValues).filter((field) => field[0] !== 'acceptedTerms');
     return (
         <>
             <Card title="Time to review your info">
