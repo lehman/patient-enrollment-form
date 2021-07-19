@@ -1,10 +1,14 @@
 /* This is a form section that must be used within a HOC component containing a <Formik /> form. */
 
-import { healthConditions } from '../constants/healthConditions';
+import { useField } from 'formik';
 import { Select } from 'antd';
+import { healthConditions } from '../constants/healthConditions';
 const { Option, OptGroup } = Select;
 
 const HealthConditions = () => {
+    const [field, , helpers] = useField('healthConditions');
+    const { setValue } = helpers;
+
     const healthConditionsMap = new Map<string, string[]>();
     healthConditions.map((item) => {
         let currentConditions = healthConditionsMap.get(item.type) ?? [];
@@ -19,17 +23,15 @@ const HealthConditions = () => {
     const conditionOptionsGrouped: JSX.Element[] = [];
     healthConditionsMap.forEach((value, key) => {
         conditionOptionsGrouped.push(
-            <>
-                <OptGroup label={capitalizeFirstLetter(key)} key={key}>
-                    {value.map((condition) => {
-                        return (
-                            <Option key={condition} value={condition}>
-                                {condition}
-                            </Option>
-                        );
-                    })}
-                </OptGroup>
-            </>,
+            <OptGroup label={capitalizeFirstLetter(key)} key={key}>
+                {value.map((condition) => {
+                    return (
+                        <Option key={condition} value={condition}>
+                            {condition}
+                        </Option>
+                    );
+                })}
+            </OptGroup>,
         );
     });
 
@@ -37,12 +39,14 @@ const HealthConditions = () => {
         <>
             <h1>Select any conditions you've experienced</h1>
             <Select
+                {...field}
                 mode="multiple"
                 allowClear={true}
                 style={{ width: '100%' }}
                 placeholder="Please select"
-                onChange={() => {}}
-                onSelect={() => {}}
+                onChange={(value) => {
+                    setValue(value);
+                }}
             >
                 {conditionOptionsGrouped}
             </Select>

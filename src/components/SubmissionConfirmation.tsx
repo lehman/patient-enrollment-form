@@ -6,7 +6,7 @@ import { StarTwoTone, SmileTwoTone, HeartTwoTone } from '@ant-design/icons';
 
 const SubmissionConfirmation = () => {
     return (
-        <>
+        <div className="confirmation">
             <Result
                 icon={
                     <>
@@ -22,7 +22,7 @@ const SubmissionConfirmation = () => {
                 We can not wait to come alongside you in your jouney toward being more informed about your health and
                 feeling your best!
             </p>
-        </>
+        </div>
     );
 };
 

@@ -4,7 +4,8 @@
 // Alcohol questions pulled from: https://www.niaaa.nih.gov/research/guidelines-and-resources/recommended-alcohol-questions
 // Interesting points around asking questions relating to sensitive topics: https://www.drugabuse.gov/sites/default/files/sensitive-topics-lecture.pdf
 
-import { ErrorMessage, Field } from 'formik';
+import InputSelect from './InputSelect';
+import InputText from './InputText';
 import './MedicalHistory.css';
 
 const medicalQuestions = [
@@ -83,45 +84,52 @@ const medicalQuestions = [
 
 const MedicalHistory = () => {
     return (
-        <>
+        <div className="medical-questionnaire">
             {medicalQuestions.map((item, index) => {
                 return (
-                    <>
-                        <span className="medical-question" key={item.id}>
-                            <label htmlFor={item.id}>{item.question}</label>
-                            <Field id={item.id} name={item.id} type="text" component="select">
-                                <option value="">Select</option>
-                                {item.options?.map((option) => {
-                                    return (
-                                        <option value={option} key={option}>
-                                            {option}
-                                        </option>
-                                    );
-                                })}
-                            </Field>
-                            <ErrorMessage name={item.id} />
-                        </span>
-                    </>
+                    <span className="medical-question" key={item.id}>
+                        <InputSelect id={item.id} name={item.id} label={item.question} placeholder="Select">
+                            <option value="">Select</option>
+                            {item.options?.map((option) => {
+                                return (
+                                    <option value={option} key={option}>
+                                        {option}
+                                    </option>
+                                );
+                            })}
+                        </InputSelect>
+                    </span>
                 );
             })}
 
-            <label htmlFor="currentMedications">
-                Please list any medications you are currently taking including non-prescription medications, vitamins
-                and supplements.
-            </label>
-            <Field id="currentMedications" name="currentMedications" type="text"></Field>
-            <ErrorMessage name="currentMedications" />
+            <span className="medical-question">
+                <InputText
+                    label="Please list any medications you are currently taking including non-prescription medications,
+                    vitamins and supplements."
+                    name="currentMedications"
+                    type="text"
+                    textarea={true}
+                />
+            </span>
 
-            <label htmlFor="medicationAllergies">Please list any medication allergies or reactions.</label>
-            <Field id="medicationAllergies" name="medicationAllergies" type="text"></Field>
-            <ErrorMessage name="medicationAllergies" />
+            <span className="medical-question">
+                <InputText
+                    label="Please list any medication allergies or reactions."
+                    name="medicationAllergies"
+                    type="text"
+                    textarea={true}
+                />
+            </span>
 
-            <label htmlFor="hospitalizations">
-                Please list any surgeries or hospital stays you have had and their approximate date / year.
-            </label>
-            <Field id="hospitalizations" name="hospitalizations" type="text"></Field>
-            <ErrorMessage name="hospitalizations" />
-        </>
+            <span className="medical-question">
+                <InputText
+                    label="Please list any surgeries or hospital stays you have had and their approximate date / year."
+                    name="hospitalizations"
+                    type="text"
+                    textarea={true}
+                />
+            </span>
+        </div>
     );
 };
 

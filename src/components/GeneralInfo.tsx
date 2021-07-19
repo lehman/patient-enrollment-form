@@ -1,13 +1,13 @@
 /* This is a form section that must be used within a HOC component containing a <Formik /> form. */
 
-import React from 'react';
-import { ErrorMessage, Field } from 'formik';
+import { useField } from 'formik';
+import { DatePicker } from 'antd';
+import InputText from './InputText';
+import InputSelect from './InputSelect';
 import { genderOptions } from '../constants/genders';
 import { maritalStatus } from '../constants/maritalStatus';
 import { stateAbbreviations } from '../constants/stateAbbreviations';
-import { option } from 'yargs';
-import { DatePicker } from 'antd';
-import { Moment } from 'moment';
+import moment from 'moment';
 
 const demographics = [
     {
@@ -70,11 +70,10 @@ const demographics = [
     },
 ];
 
-function onDOBChange(date: Moment | null, dateString: string) {
-    console.log(date, dateString);
-}
-
 const GeneralInfo = () => {
+    const [field, meta, helpers] = useField('dateOfBirth');
+    const { setValue } = helpers;
+
     return (
         <>
             {demographics.map((item) => {
@@ -85,17 +84,14 @@ const GeneralInfo = () => {
                     // fall through
                     case 'email':
                         return (
-                            <span className="input" key={item.name}>
-                                <label htmlFor={item.name}>{item.label}</label>
-                                <Field id={item.name} name={item.name} type={item.type} />
-                                <ErrorMessage name={item.name} />
+                            <span className="input-field" key={item.name}>
+                                <InputText label={item.label} name={item.name} type={item.type} key={item.name} />
                             </span>
                         );
                     case 'select':
                         return (
-                            <span className="input" key={item.name}>
-                                <label htmlFor={item.name}>{item.label}</label>
-                                <Field id={item.name} name={item.name} type={item.type} component="select">
+                            <span className="input-field" key={item.name}>
+                                <InputSelect id={item.name} name={item.name} label={item.label} placeholder="Select">
                                     <option value="">Select</option>
                                     {item.options?.map((option) => {
                                         return (
@@ -104,16 +100,24 @@ const GeneralInfo = () => {
                                             </option>
                                         );
                                     })}
-                                </Field>
-                                <ErrorMessage name={item.name} />
+                                </InputSelect>
                             </span>
                         );
                     case 'datePicker':
                         return (
-                            <span className="input" key={item.name}>
+                            <span className="input-field" key={item.name}>
                                 <label htmlFor={item.name}>{item.label}</label>
-                                <DatePicker id={item.name} name={item.name} onChange={onDOBChange} />
-                                <ErrorMessage name={item.name} />
+                                <div>
+                                    <DatePicker
+                                        id={item.name}
+                                        name={item.name}
+                                        onChange={(date, dateString) => {
+                                            setValue(dateString);
+                                        }}
+                                        value={field.value ? moment(field.value) : null}
+                                    />
+                                    {meta.touched && meta.error ? <div className="error">{meta.error}</div> : null}
+                                </div>
                             </span>
                         );
                     default:

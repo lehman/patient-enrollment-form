@@ -1,20 +1,20 @@
 /* This is a form section that must be used within a HOC component containing a <Formik /> form. */
 
-import { useField } from 'formik';
 import { Card } from 'antd';
+import InputCheckbox from './InputCheckbox';
+import './ReviewInfo.css';
 
 const ReviewInfo = ({ formValues, ...props }: any) => {
-    const [field, meta] = useField({ ...props, name: 'acceptedTerms', type: 'checkbox' });
-
     const formInputs = Object.entries(formValues).filter((field) => field[0] !== 'acceptedTerms');
+
     return (
         <>
-            <Card title="Time to review your info">
+            <Card title="Time to review your info" className="card">
                 {formInputs.map((item) => {
                     return <p key={item[0]}>{`${item[0]}: ${item[1]}`}</p>;
                 })}
             </Card>
-            <Card title="Terms and conditions">
+            <Card title="Terms and conditions" className="card">
                 <span>
                     Nullam quis risus eget urna mollis ornare vel eu leo. Aenean lacinia bibendum nulla sed consectetur.
                     Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Etiam porta sem malesuada magna
@@ -24,11 +24,8 @@ const ReviewInfo = ({ formValues, ...props }: any) => {
                     vestibulum at eros. Vestibulum id ligula porta felis euismod semper. Donec ullamcorper nulla non
                     metus auctor fringilla.
                 </span>
-                <div>
-                    <label className="checkbox-input">
-                        <input type="checkbox" {...field} {...props} />I accept the terms and conditions
-                    </label>
-                    {meta.touched && meta.error ? <div className="error">{meta.error}</div> : null}
+                <div className="checkbox-input">
+                    <InputCheckbox name="acceptedTerms" label="I accept the terms and conditions"></InputCheckbox>
                 </div>
             </Card>
         </>

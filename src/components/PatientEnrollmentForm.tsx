@@ -13,6 +13,33 @@ import { stateAbbreviations } from '../constants/stateAbbreviations';
 import './PatientEnrollmentForm.css';
 
 const { Step } = Steps;
+
+const initialValues = {
+    firstName: '',
+    lastName: '',
+    gender: '',
+    dateOfBirth: '',
+    email: '',
+    phoneNumber: '',
+    addressLine1: '',
+    city: '',
+    state: '',
+    postalCode: '',
+    maritalStatus: '',
+    healthConditions: [],
+    tobaccoStatus: '',
+    tobaccoHistory: '',
+    alcoholStatus: '',
+    alcoholFrequency: '',
+    alcoholVolume: '',
+    drugsStatus: '',
+    drugsFrequency: '',
+    currentMedications: '',
+    medicationAllergies: '',
+    hospitalizations: '',
+    acceptedTerms: false,
+};
+
 const steps = [
     {
         key: 'general-info',
@@ -23,7 +50,10 @@ const steps = [
             firstName: Yup.string().max(15, 'Must be 15 characters or less').required('Required'),
             lastName: Yup.string().max(20, 'Must be 20 characters or less').required('Required'),
             gender: Yup.string().oneOf(genderOptions, 'Invalid gender option selected').required('Required'),
-            dateOfBirth: Yup.date().max(new Date()), //.required('Required'),
+            dateOfBirth: Yup.date()
+                .max(new Date(), `We don't service the unborn as of yet, but stay tuned.`)
+                .nullable()
+                .required('Required'),
             email: Yup.string().email('Invalid email address').required('Required'),
             phoneNumber: Yup.string()
                 // .matches(/[0-9]{3}-[0-9]{3}-[0-9]{4}/, 'Phone number must be in format xxx-xxx-xxxx')
@@ -56,7 +86,7 @@ const steps = [
         title: 'Review Info',
         description: `Double-check that we've got everything down correctly.`,
         content: <ReviewInfo />,
-        validationSchema: null,
+        validationSchema: Yup.object({ acceptedTerms: Yup.boolean().oneOf([true], 'Required') }),
     },
 ];
 
@@ -90,30 +120,7 @@ const PatientEnrollmentForm = () => {
 
     return (
         <Formik
-            initialValues={{
-                firstName: '',
-                lastName: '',
-                gender: '',
-                dateOfBirth: '',
-                email: '',
-                phoneNumber: '',
-                addressLine1: '',
-                city: '',
-                state: '',
-                postalCode: '',
-                maritalStatus: '',
-                healthConditions: [],
-                tobaccoStatus: '',
-                tobaccoHistory: '',
-                alcoholStatus: '',
-                alcoholFrequency: '',
-                alcoholVolume: '',
-                drugsStatus: '',
-                drugsFrequency: '',
-                currentMedications: '',
-                medicationAllergies: '',
-                hospitalizations: '',
-            }}
+            initialValues={initialValues}
             validationSchema={steps[currentStep].validationSchema}
             onSubmit={(values) => {
                 if (isLastStep()) {
@@ -146,16 +153,16 @@ const PatientEnrollmentForm = () => {
 
                         <div>
                             {!formSubmitted ? (
-                                <>
+                                <div className="nav-buttons">
                                     {currentStep > 0 ? (
-                                        <Button type="primary" onClick={() => goToPrevStep()}>
+                                        <Button type="primary" className="button-back" onClick={() => goToPrevStep()}>
                                             Previous
                                         </Button>
                                     ) : null}
-                                    <Button type="primary" htmlType="submit">
+                                    <Button type="primary" className="button-forward" htmlType="submit">
                                         {isLastStep() ? 'Submit' : 'Next'}
                                     </Button>
-                                </>
+                                </div>
                             ) : null}
                         </div>
                     </div>
