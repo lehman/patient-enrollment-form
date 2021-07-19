@@ -4,8 +4,8 @@
 // Alcohol questions pulled from: https://www.niaaa.nih.gov/research/guidelines-and-resources/recommended-alcohol-questions
 // Interesting points around asking questions relating to sensitive topics: https://www.drugabuse.gov/sites/default/files/sensitive-topics-lecture.pdf
 
-import InputSelect from './InputSelect';
-import InputText from './InputText';
+import InputSelect from '../InputSelect';
+import InputText from '../InputText';
 import './MedicalHistory.css';
 
 const medicalQuestions = [

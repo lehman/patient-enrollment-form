@@ -1,7 +1,7 @@
 /* This is a form section that must be used within a HOC component containing a <Formik /> form. */
 
 import { Card } from 'antd';
-import InputCheckbox from './InputCheckbox';
+import InputCheckbox from '../InputCheckbox';
 import './ReviewInfo.css';
 
 const ReviewInfo = ({ formValues, ...props }: any) => {

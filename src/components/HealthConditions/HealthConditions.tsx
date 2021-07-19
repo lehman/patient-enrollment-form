@@ -2,7 +2,7 @@
 
 import { useField } from 'formik';
 import { Select } from 'antd';
-import { healthConditions } from '../constants/healthConditions';
+import { healthConditions } from '../../constants/healthConditions';
 const { Option, OptGroup } = Select;
 
 const HealthConditions = () => {

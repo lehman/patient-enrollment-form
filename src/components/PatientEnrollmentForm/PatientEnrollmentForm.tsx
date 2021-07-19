@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { Button, Steps } from 'antd';
-import GeneralInfo from './GeneralInfo';
-import HealthConditions from './HealthConditions';
-import MedicalHistory from './MedicalHistory';
-import ReviewInfo from './ReviewInfo';
-import SubmissionConfirmation from './SubmissionConfirmation';
-import { genderOptions } from '../constants/genders';
-import { maritalStatus } from '../constants/maritalStatus';
-import { stateAbbreviations } from '../constants/stateAbbreviations';
+import GeneralInfo from '../GeneralInfo/GeneralInfo';
+import HealthConditions from '../HealthConditions/HealthConditions';
+import MedicalHistory from '../MedicalHistory/MedicalHistory';
+import ReviewInfo from '../ReviewInfo/ReviewInfo';
+import SubmissionConfirmation from '../SubmissionConfirmation/SubmissionConfirmation';
+import { genderOptions } from '../../constants/genders';
+import { maritalStatus } from '../../constants/maritalStatus';
+import { stateAbbreviations } from '../../constants/stateAbbreviations';
 import './PatientEnrollmentForm.css';
 
 const { Step } = Steps;
@@ -90,9 +90,13 @@ const steps = [
     },
 ];
 
-const PatientEnrollmentForm = () => {
+interface PatientEnrollmentFormProps {
+    onFormSubmit: (values: any) => void;
+    formSubmitted: boolean;
+}
+
+const PatientEnrollmentForm = ({ onFormSubmit, formSubmitted }: PatientEnrollmentFormProps) => {
     const [currentStep, setCurrentStep] = useState(0);
-    const [formSubmitted, setFormSubmitted] = useState(false);
 
     const goToNextStep = () => {
         if (currentStep < steps.length - 1) {
@@ -106,69 +110,67 @@ const PatientEnrollmentForm = () => {
         }
     };
 
-    const submitForm = (values: any) => {
-        const formInputs = Object.entries(values);
-        formInputs.map((input: any) => {
-            return console.log(`${input[0]}: ${input[1]}`);
-        });
-        setFormSubmitted(true);
-    };
-
     const isLastStep = () => {
         return currentStep === steps.length - 1;
     };
 
     return (
-        <Formik
-            initialValues={initialValues}
-            validationSchema={steps[currentStep].validationSchema}
-            onSubmit={(values) => {
-                if (isLastStep()) {
-                    submitForm(values);
-                } else {
-                    goToNextStep();
-                }
-            }}
-        >
-            {(props) => (
-                <Form className="patient-enrollment-form">
-                    <Steps
-                        responsive={true}
-                        className="patient-enrollment-form-progress"
-                        current={currentStep}
-                        status={formSubmitted ? 'finish' : undefined}
-                    >
-                        {steps.map((item) => (
-                            <Step title={item.title} description={item.description} key={item.key} />
-                        ))}
-                    </Steps>
-                    <div className="patient-enrollment-form-fields">
-                        {formSubmitted ? (
-                            <SubmissionConfirmation />
-                        ) : isLastStep() ? (
-                            <ReviewInfo formValues={props.values} />
-                        ) : (
-                            steps[currentStep].content
-                        )}
+        <span data-testid="patient-enrollment-form">
+            <Formik
+                initialValues={initialValues}
+                validationSchema={steps[currentStep].validationSchema}
+                onSubmit={(values) => {
+                    if (isLastStep()) {
+                        onFormSubmit(values);
+                    } else {
+                        goToNextStep();
+                    }
+                }}
+            >
+                {(props) => (
+                    <Form className="patient-enrollment-form">
+                        <Steps
+                            responsive={true}
+                            className="patient-enrollment-form-progress"
+                            current={currentStep}
+                            status={formSubmitted ? 'finish' : undefined}
+                        >
+                            {steps.map((item) => (
+                                <Step title={item.title} description={item.description} key={item.key} />
+                            ))}
+                        </Steps>
+                        <div className="patient-enrollment-form-fields">
+                            {formSubmitted ? (
+                                <SubmissionConfirmation />
+                            ) : isLastStep() ? (
+                                <ReviewInfo formValues={props.values} />
+                            ) : (
+                                steps[currentStep].content
+                            )}
 
-                        <div>
-                            {!formSubmitted ? (
-                                <div className="nav-buttons">
-                                    {currentStep > 0 ? (
-                                        <Button type="primary" className="button-back" onClick={() => goToPrevStep()}>
-                                            Previous
+                            <div>
+                                {!formSubmitted ? (
+                                    <div className="nav-buttons">
+                                        {currentStep > 0 ? (
+                                            <Button
+                                                type="primary"
+                                                className="button-back"
+                                                onClick={() => goToPrevStep()}
+                                            >
+                                                Previous
+                                            </Button>
+                                        ) : null}
+                                        <Button type="primary" className="button-forward" htmlType="submit">
+                                            {isLastStep() ? 'Submit' : 'Next'}
                                         </Button>
-                                    ) : null}
-                                    <Button type="primary" className="button-forward" htmlType="submit">
-                                        {isLastStep() ? 'Submit' : 'Next'}
-                                    </Button>
-                                </div>
-                            ) : null}
+                                    </div>
+                                ) : null}
+                            </div>
                         </div>
-                    </div>
-                </Form>
-            )}
-        </Formik>
+                    </Form>
+                )}
+            </Formik>
+        </span>
     );
 };
 

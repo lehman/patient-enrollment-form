@@ -16,7 +16,7 @@ const InputCheckbox = ({ label, children, ...rest }: CheckboxFieldProps) => {
         <>
             <label htmlFor={rest.id || rest.name}></label>
             <div>
-                <Checkbox {...field} {...rest}>
+                <Checkbox {...field} {...rest} data-testid={rest.name}>
                     {label}
                 </Checkbox>
                 {children}

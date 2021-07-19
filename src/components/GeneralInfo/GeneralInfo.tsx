@@ -2,13 +2,14 @@
 
 import { useField } from 'formik';
 import { DatePicker } from 'antd';
-import InputText from './InputText';
-import InputSelect from './InputSelect';
-import { genderOptions } from '../constants/genders';
-import { maritalStatus } from '../constants/maritalStatus';
-import { stateAbbreviations } from '../constants/stateAbbreviations';
+import InputText from '../InputText';
+import InputSelect from '../InputSelect';
+import { genderOptions } from '../../constants/genders';
+import { maritalStatus } from '../../constants/maritalStatus';
+import { stateAbbreviations } from '../../constants/stateAbbreviations';
 import moment from 'moment';
 
+// TODO: Pull this up to use in ReviewInfo, create for all form fields to pass label down
 const demographics = [
     {
         name: 'firstName',
