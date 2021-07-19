@@ -2,6 +2,8 @@
 
 As a submission for the [Parsley Health coding challenge](https://github.com/parsleyhealth/engineering-recruiting-tests/blob/master/front-end-tests/patient-enrollment-form/multi-screen.md), this is a multi-step patient enrollment form that gathers standard personal, demographic, health, and medical data, and then outputs the collected data to the console upon form submission.
 
+**FYI**: I spent much more than 4-6 hours on this. About 16. It wasn't where I wanted it to be after 6 (not that it is now, either), so I figured I might as well keep learning by working on it.
+
 ## Libraries Used
 
 This repo was built using `create-react-app --template typescript`. In addition to the libraries that are built in with using `create-react-app`, this repo uses:
